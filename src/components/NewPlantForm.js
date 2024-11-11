@@ -7,7 +7,7 @@ function NewPlantForm({ onAddPlant }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    fetch("http://localhost:6001/plants", {
+    fetch("https://react-hooks-cc-plantshop-3-4xbu.onrender.com/plants", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

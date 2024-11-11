@@ -11,7 +11,7 @@ function PlantCard({ plant, onDeletePlant, onUpdatePlant }) {
   }
 
   function handleDeleteClick() {
-    fetch(`http://localhost:6001/plants/${id}`, {
+    fetch(`https://react-hooks-cc-plantshop-3-4xbu.onrender.com/plants/${id}`, {
       method: "DELETE",
     });
 
@@ -20,7 +20,7 @@ function PlantCard({ plant, onDeletePlant, onUpdatePlant }) {
 
   function handlePriceFormSubmit(e) {
     e.preventDefault();
-    fetch(`http://localhost:6001/plants/${id}`, {
+    fetch(`https://react-hooks-cc-plantshop-3-4xbu.onrender.com/plants/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
