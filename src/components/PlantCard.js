@@ -1,61 +1,54 @@
 import React, { useState } from "react";
 
-function PlantCard({ plant, onDeletePlant, onUpdatePlant }) {
-  const { id, name, image, price } = plant;
+function PlantCard({ plant, onPlantDelete }) {
+  const [inStock, setInStock] = useState(true);
+  const [price, setPrice] = useState(plant.price);
 
-  const [isInStock, setIsInStock] = useState(true);
-  const [updatedPrice, setUpdatedPrice] = useState(price);
+  function handlePlantDelete() {
+  
 
-  function handleToggleStock() {
-    setIsInStock((isInStock) => !isInStock);
-  }
-
-  function handleDeleteClick() {
-    fetch(`https://react-hooks-cc-plantshop-3-4xbu.onrender.com/plants/${id}`, {
+    fetch(`https://react-hooks-cc-plantshop-3-4xbu.onrender.com/plants/${plant.id}`, {
       method: "DELETE",
-    });
-
-    onDeletePlant(id);
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        onPlantDelete(plant.id);
+      });
   }
 
-  function handlePriceFormSubmit(e) {
+  function handleNewPrice(e) {
     e.preventDefault();
-    fetch(`https://react-hooks-cc-plantshop-3-4xbu.onrender.com/plants/${id}`, {
+    fetch(`https://react-hooks-cc-plantshop-3-4xbu.onrender.com/plants/${plant.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ price: updatedPrice }),
-    })
-      .then((r) => r.json())
-      .then((updatedPlant) => {
-        onUpdatePlant(updatedPlant);
-      });
+      body: JSON.stringify({ price: parseFloat(price) }),
+    });
   }
-
   return (
     <li className="card">
-      <img src={image} alt={name} />
-      <h4>{name}</h4>
+      <img src={plant.image} alt={plant.name} />
+      <h4>{plant.name}</h4>
       <p>Price: {price}</p>
-      {isInStock ? (
-        <button className="primary" onClick={handleToggleStock}>
+
+      <form onSubmit={handleNewPrice}>
+        <input
+          onChange={(e) => setPrice(e.target.value)}
+          type="text"
+          value={price}
+        />
+      </form>
+
+      {inStock ? (
+        <button onClick={() => setInStock(false)} className="primary">
           In Stock
         </button>
       ) : (
-        <button onClick={handleToggleStock}>Out of Stock</button>
+        <button onClick={() => setInStock(true)}>Out of Stock</button>
       )}
-      <button onClick={handleDeleteClick}>Delete</button>
-      <form onSubmit={handlePriceFormSubmit}>
-        <input
-          type="number"
-          step="0.01"
-          placeholder="New price..."
-          value={updatedPrice}
-          onChange={(e) => setUpdatedPrice(parseFloat(e.target.value))}
-        />
-        <button type="submit">Update Price</button>
-      </form>
+
+      <button onClick={handlePlantDelete}>Delete</button>
     </li>
   );
 }
